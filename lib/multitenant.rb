@@ -11,7 +11,7 @@ module Multitenant
       Multitenant.current_tenant = tenant
       yield
     ensure
-      Multitenant.current_tenant = nil
+      #Multitenant.current_tenant = nil # TODO: If commented fixed spree error 'No Product Found' when add new taxon
     end
   end
 
