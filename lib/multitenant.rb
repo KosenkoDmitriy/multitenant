@@ -21,13 +21,14 @@ module Multitenant
     # see Multitenant#current_tenant
     def belongs_to_multitenant(association = :tenant)
       reflection = reflect_on_association association
-      before_validation Proc.new {|m|
-        return unless Multitenant.current_tenant
-        m.send "#{association}=".to_sym, Multitenant.current_tenant
-      }, :on => :create
+      before_validation Proc.new {:check }, :on => :create
       default_scope lambda {
         where({reflection.foreign_key => Multitenant.current_tenant.id}) if Multitenant.current_tenant
       }
+    end
+    def check
+      return unless Multitenant.current_tenant
+      m.send "#{association}=".to_sym, Multitenant.current_tenant
     end
   end
 end
